@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ttm-telegram"
+version = "0.1.0"
+description = "MCP server đọc tin nhắn nhóm Telegram bằng tài khoản của chính bạn (chạy trên máy bạn, stdio)"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "Toan Tran" }]
+keywords = ["mcp", "telegram", "claude", "ai-agent"]
+dependencies = [
+  "fastmcp==4.1.1",
+  "telethon==1.45.0",
+  "python-dotenv==1.2.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/toantranmei/ttm-telegram"
+Repository = "https://github.com/toantranmei/ttm-telegram"
+
+[project.scripts]
+ttm-telegram = "ttm_telegram.server:main"
+ttm-telegram-login = "ttm_telegram.login:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ttm_telegram"]

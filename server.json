@@ -1,0 +1,22 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "io.github.toantranmei/ttm-telegram",
+  "description": "MCP server đọc tin nhắn nhóm Telegram bằng tài khoản của chính bạn (chạy trên máy bạn)",
+  "repository": { "url": "https://github.com/toantranmei/ttm-telegram", "source": "github" },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "ttm-telegram",
+      "version": "0.1.0",
+      "transport": { "type": "stdio" },
+      "environmentVariables": [
+        { "name": "TELEGRAM_API_ID", "description": "API id lấy tại my.telegram.org", "isRequired": true },
+        { "name": "TELEGRAM_API_HASH", "description": "API hash lấy tại my.telegram.org", "isRequired": true, "isSecret": true },
+        { "name": "TELEGRAM_SESSION", "description": "Đường dẫn file session trên máy bạn", "isRequired": false },
+        { "name": "ALLOWED_GROUP_IDS", "description": "group_id được phép đọc, cách nhau dấu phẩy, hoặc ALL", "isRequired": false },
+        { "name": "TELEGRAM_TZ", "description": "Múi giờ, mặc định Asia/Ho_Chi_Minh", "isRequired": false }
+      ]
+    }
+  ]
+}
