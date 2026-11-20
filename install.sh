@@ -23,6 +23,10 @@ case "$arch" in
   *) echo "Kiến trúc chưa hỗ trợ: $arch" >&2; exit 1 ;;
 esac
 
+if [ "$os_id" = "darwin" ] && [ "$arch_id" = "x64" ]; then
+  echo "Mac Intel chưa có bản dựng sẵn. Dùng Mac Apple Silicon, hoặc cài bằng Python: uvx $NAME (sau khi có gói PyPI)." >&2; exit 1
+fi
+
 target="$os_id-$arch_id"
 archive="$NAME-$target.tar.gz"
 tmp="$(mktemp -d)"; trap 'rm -rf "$tmp"' EXIT
