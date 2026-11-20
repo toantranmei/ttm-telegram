@@ -13,7 +13,7 @@ binary, minimum = sys.argv[1], int(sys.argv[2])
 env = dict(os.environ, JIRA_URL="https://example.invalid", JIRA_PERSONAL_TOKEN="x",
            TELEGRAM_API_ID="1", TELEGRAM_API_HASH="x" * 32)
 p = subprocess.Popen([binary], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                     stderr=subprocess.DEVNULL, text=True, env=env)
+                     stderr=subprocess.DEVNULL, encoding="utf-8", errors="replace", env=env)
 lines: "queue.Queue[str]" = queue.Queue()
 threading.Thread(target=lambda: [lines.put(l) for l in p.stdout], daemon=True).start()
 
