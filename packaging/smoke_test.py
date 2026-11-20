@@ -13,7 +13,9 @@ binary, minimum = sys.argv[1], int(sys.argv[2])
 env = dict(os.environ, JIRA_URL="https://example.invalid", JIRA_PERSONAL_TOKEN="x",
            TELEGRAM_API_ID="1", TELEGRAM_API_HASH="x" * 32)
 p = subprocess.Popen([binary], stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                     stderr=subprocess.DEVNULL, encoding="utf-8", errors="replace", env=env)
+                     stderr=subprocess.PIPE, encoding="utf-8", errors="replace", env=env)
+errs: list[str] = []
+threading.Thread(target=lambda: [errs.append(l) for l in p.stderr], daemon=True).start()
 lines: "queue.Queue[str]" = queue.Queue()
 threading.Thread(target=lambda: [lines.put(l) for l in p.stdout], daemon=True).start()
 
@@ -21,6 +23,12 @@ threading.Thread(target=lambda: [lines.put(l) for l in p.stdout], daemon=True).s
 def send(o):
     p.stdin.write(json.dumps(o) + "\n")
     p.stdin.flush()
+
+
+def dump_stderr():
+    print("--- stderr của binary (cuối) ---")
+    print("".join(errs[-40:]))
+    print(f"--- exit: {p.poll()} ---")
 
 
 def read(timeout=60):
@@ -35,13 +43,13 @@ try:
           "params": {"protocolVersion": "2025-06-18", "capabilities": {}, "clientInfo": {"name": "smoke", "version": "0"}}})
     # Lần chạy đầu của binary chưa ký có thể chậm (quét bảo mật trên macOS), nên chờ lâu hơn ở bước này.
     if '"result"' not in read(timeout=180):
-        print("FAIL: initialize")
+        print("FAIL: initialize"); dump_stderr()
         sys.exit(1)
     send({"jsonrpc": "2.0", "method": "notifications/initialized"})
     send({"jsonrpc": "2.0", "id": 2, "method": "tools/list"})
     line = read()
     if not line:
-        print("FAIL: tools/list timeout")
+        print("FAIL: tools/list timeout"); dump_stderr()
         sys.exit(1)
     n = len(json.loads(line)["result"]["tools"])
     print(f"OK: {n} tools")
