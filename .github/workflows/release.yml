@@ -65,6 +65,7 @@ jobs:
           gh release create "$GITHUB_REF_NAME" \
             artifacts/ttm-telegram-*.tar.gz artifacts/ttm-telegram-*.zip \
             artifacts/ttm-telegram-*.sha256 \
+            artifacts/ttm-telegram-*.mcpb \
             artifacts/ttm-telegram-*.mcpb artifacts/ttm-telegram-*.mcpb.sha256 \
             install.sh install.ps1 \
             --title "$GITHUB_REF_NAME" --generate-notes
