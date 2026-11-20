@@ -22,9 +22,6 @@ case "$arch" in
   x86_64|amd64)  arch_id="x64" ;;
   *) echo "Kiến trúc chưa hỗ trợ: $arch" >&2; exit 1 ;;
 esac
-if [ "$os_id" = "linux" ] && [ "$arch_id" = "arm64" ]; then
-  echo "Linux arm64 chưa có bản dựng sẵn. Cài bằng Python: uvx $NAME" >&2; exit 1
-fi
 
 target="$os_id-$arch_id"
 archive="$NAME-$target.tar.gz"

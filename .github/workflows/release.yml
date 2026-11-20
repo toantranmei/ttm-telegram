@@ -16,6 +16,7 @@ jobs:
           - { os: macos-latest, target: darwin-arm64 }
           - { os: macos-15-intel, target: darwin-x64 }
           - { os: ubuntu-22.04, target: linux-x64 }
+          - { os: ubuntu-24.04-arm, target: linux-arm64 }
           - { os: windows-latest, target: windows-x64 }
     runs-on: ${{ matrix.os }}
     steps:
@@ -24,6 +25,12 @@ jobs:
       - name: Build binary
         shell: bash
         run: packaging/build.sh ttm-telegram ${{ matrix.target }}
+      - name: Smoke test
+        shell: bash
+        run: |
+          bin="dist/ttm-telegram"
+          if [[ "${{ matrix.target }}" == windows-* ]]; then bin="$bin.exe"; fi
+          uv run --quiet --python 3.12 packaging/smoke_test.py "$bin" 3
       - uses: actions/upload-artifact@v4
         with:
           name: ttm-telegram-${{ matrix.target }}
