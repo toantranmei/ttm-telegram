@@ -3,12 +3,12 @@
   "name": "io.github.toantranmei/ttm-telegram",
   "description": "MCP server đọc tin nhắn nhóm Telegram bằng tài khoản của chính bạn (chạy trên máy bạn)",
   "repository": { "url": "https://github.com/toantranmei/ttm-telegram", "source": "github" },
-  "version": "0.1.0",
+  "version": "0.1.1",
   "packages": [
     {
       "registryType": "pypi",
       "identifier": "ttm-telegram",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "transport": { "type": "stdio" },
       "environmentVariables": [
         { "name": "TELEGRAM_API_ID", "description": "API id lấy tại my.telegram.org", "isRequired": true },

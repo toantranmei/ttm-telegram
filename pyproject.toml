@@ -4,11 +4,11 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ttm-telegram"
-version = "0.1.0"
+version = "0.1.1"
 description = "MCP server đọc tin nhắn nhóm Telegram bằng tài khoản của chính bạn (chạy trên máy bạn, stdio)"
 readme = "README.md"
 license = "MIT"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.13"  # FastMCP 4.1.1 không trả lời tools/list trên Python 3.13+
 authors = [{ name = "Toan Tran" }]
 keywords = ["mcp", "telegram", "claude", "ai-agent"]
 dependencies = [

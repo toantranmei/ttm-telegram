@@ -8,7 +8,7 @@ target="${2:?os-arch}"
 root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$root"
 
-uv run --quiet --with "pyinstaller==6.*" --with "mcp==2.3.0" --with-editable . \
+uv run --quiet --python 3.12 --with "pyinstaller==6.*" --with "mcp==2.3.0" --with-editable . \
   pyinstaller --noconfirm --onefile --clean --name "$name" \
   --paths src packaging/entry.py
 
