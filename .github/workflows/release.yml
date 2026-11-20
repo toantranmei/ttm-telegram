@@ -1,0 +1,70 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: true
+      matrix:
+        include:
+          - { os: macos-14, target: darwin-arm64 }
+          - { os: macos-15-intel, target: darwin-x64 }
+          - { os: ubuntu-22.04, target: linux-x64 }
+          - { os: windows-latest, target: windows-x64 }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Build binary
+        shell: bash
+        run: packaging/build.sh ttm-telegram ${{ matrix.target }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ttm-telegram-${{ matrix.target }}
+          path: dist/release/*
+
+  bundles:
+    needs: build
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - name: Pack .mcpb bundles
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          mkdir -p bundles
+          mcpb/pack.sh "$version" artifacts bundles
+      - uses: actions/upload-artifact@v4
+        with:
+          name: bundles
+          path: bundles/*
+
+  publish:
+    needs: [build, bundles]
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            artifacts/ttm-telegram-*.tar.gz artifacts/ttm-telegram-*.zip \
+            artifacts/ttm-telegram-*.sha256 \
+            artifacts/ttm-telegram-*.mcpb artifacts/ttm-telegram-*.mcpb.sha256 \
+            install.sh install.ps1 \
+            --title "$GITHUB_REF_NAME" --generate-notes
