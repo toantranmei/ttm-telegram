@@ -33,7 +33,8 @@ def read(timeout=60):
 try:
     send({"jsonrpc": "2.0", "id": 1, "method": "initialize",
           "params": {"protocolVersion": "2025-06-18", "capabilities": {}, "clientInfo": {"name": "smoke", "version": "0"}}})
-    if '"result"' not in read():
+    # Lần chạy đầu của binary chưa ký có thể chậm (quét bảo mật trên macOS), nên chờ lâu hơn ở bước này.
+    if '"result"' not in read(timeout=180):
         print("FAIL: initialize")
         sys.exit(1)
     send({"jsonrpc": "2.0", "method": "notifications/initialized"})
